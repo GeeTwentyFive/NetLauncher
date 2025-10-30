@@ -46,7 +46,7 @@ def on_connect_button_pressed():
         except Exception:
                 pass
 
-        os.system(RUN_PREFIX+TARGET_APP+" "+ip.get()+" "+TARGET_PORT)
+        os.system(RUN_PREFIX+TARGET_APP+" "+upnp.externalipaddress()+" "+ip.get()+" "+TARGET_PORT)
 tk.Button(root, text="Connect", command=on_connect_button_pressed).pack()
 
 root.mainloop()
