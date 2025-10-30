@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter as tk
 import miniupnpc
 
@@ -13,7 +14,11 @@ if os.name == "nt":
 else:
         RUN_PREFIX = "./"
 
-os.chdir(os.path.abspath(os.path.dirname(__file__))) # For Pyinstaller executable
+# For Pyinstaller
+if getattr(sys, "frozen", False):
+        os.chdir(os.path.dirname(sys.executable))
+else:
+        os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
 root = tk.Tk()
 root.title("Enter IP address")
