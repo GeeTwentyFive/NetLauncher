@@ -35,6 +35,14 @@ def on_connect_button_pressed():
                         "",
                         ""
                 )
+                upnp.addportmapping(
+                        TARGET_PORT,
+                        "TCP",
+                        upnp.lanaddr,
+                        TARGET_PORT,
+                        "",
+                        ""
+                )
         except Exception:
                 pass
 
