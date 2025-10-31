@@ -1,6 +1,5 @@
 import os
 import sys
-import tkinter as tk
 import miniupnpc
 
 
@@ -20,38 +19,30 @@ if getattr(sys, "frozen", False):
 else:
         os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
-root = tk.Tk()
-root.title("Enter IP address")
-root.eval("tk::PlaceWindow . center")
+ip = input("Enter target IP address: ")
 
-ip = tk.StringVar()
-tk.Entry(root, textvariable=ip).pack()
+try:
+        upnp = miniupnpc.UPnP()
+        try: upnp.discover()
+        except: pass
+        upnp.selectigd()
+        upnp.addportmapping(
+                TARGET_PORT,
+                "UDP",
+                upnp.lanaddr,
+                TARGET_PORT,
+                "",
+                ""
+        )
+        upnp.addportmapping(
+                TARGET_PORT,
+                "TCP",
+                upnp.lanaddr,
+                TARGET_PORT,
+                "",
+                ""
+        )
+except Exception as e:
+        print("ERROR: " + str(e))
 
-def on_connect_button_pressed():
-        try:
-                upnp = miniupnpc.UPnP()
-                upnp.discover()
-                upnp.selectigd()
-                upnp.addportmapping(
-                        TARGET_PORT,
-                        "UDP",
-                        upnp.lanaddr,
-                        TARGET_PORT,
-                        "",
-                        ""
-                )
-                upnp.addportmapping(
-                        TARGET_PORT,
-                        "TCP",
-                        upnp.lanaddr,
-                        TARGET_PORT,
-                        "",
-                        ""
-                )
-        except Exception:
-                pass
-
-        os.system(RUN_PREFIX+TARGET_APP+" "+upnp.externalipaddress()+" "+ip.get()+" "+TARGET_PORT)
-tk.Button(root, text="Connect", command=on_connect_button_pressed).pack()
-
-root.mainloop()
+os.system(RUN_PREFIX+TARGET_APP+" "+upnp.externalipaddress()+" "+ip+" "+TARGET_PORT)
